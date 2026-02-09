@@ -50,6 +50,7 @@ body {
 /* TURF CONTAINER */
 .turf-container {
   max-width: 1200px;
+   align-items: stretch;
   margin: auto;
   padding: 20px;
   display: grid;
@@ -64,13 +65,16 @@ body {
 .slot {
   background: rgba(255, 255, 255, 0.95);
   border-radius: 14px;
+  padding: 16px;
   box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+
   transition:
-    background 0.4s cubic-bezier(.22,.61,.36,1),
-    backdrop-filter 0.4s cubic-bezier(.22,.61,.36,1),
-    box-shadow 0.4s cubic-bezier(.22,.61,.36,1),
-    transform 0.4s cubic-bezier(.22,.61,.36,1);
+    padding 0.35s cubic-bezier(.22,.61,.36,1),
+    background 0.35s cubic-bezier(.22,.61,.36,1),
+    backdrop-filter 0.35s cubic-bezier(.22,.61,.36,1),
+    box-shadow 0.35s cubic-bezier(.22,.61,.36,1);
 }
+
 /*
 .turf-card {
   background: white;
@@ -92,12 +96,27 @@ body {
 */
 .turf-card:hover,
 .review:hover,
-.slot:hover {
+.slot:hover.turf-card:hover {
+  padding: 22px; /* real size increase */
+  background: rgba(255, 255, 255, 0.30);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.28);
+}/*
+ {
   background: rgba(255, 255, 255, 0.28);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   box-shadow: 0 16px 40px rgba(0,0,0,0.28);
-  transform: translateY(-6px) scale(1.01);
+  transform: translateY(-6px) scale(1.01);*/
+
+
+.turf-card {
+  box-sizing: border-box;
+}
+.turf-container:hover {
+  gap: 28px;
+  transition: gap 0.35s cubic-bezier(.22,.61,.36,1);
 }
 
 .turf-card::after {
