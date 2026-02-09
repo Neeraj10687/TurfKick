@@ -6,7 +6,7 @@
 }
 
 body {
-  background: #f4f6f8;
+  background: linear-gradient(120deg, #0b3d2e, #145a45);
 }
 
 /* NAVBAR */
@@ -58,6 +58,20 @@ body {
 }
 
 /* TURF CARD */
+
+.turf-card,
+.review,
+.slot {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  transition:
+    background 0.4s cubic-bezier(.22,.61,.36,1),
+    backdrop-filter 0.4s cubic-bezier(.22,.61,.36,1),
+    box-shadow 0.4s cubic-bezier(.22,.61,.36,1),
+    transform 0.4s cubic-bezier(.22,.61,.36,1);
+}
+/*
 .turf-card {
   background: white;
   border-radius: 8px;
@@ -75,7 +89,41 @@ body {
   height: 180px;
   object-fit: cover;
 }
+*/
+.turf-card:hover,
+.review:hover,
+.slot:hover {
+  background: rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.28);
+  transform: translateY(-6px) scale(1.01);
+}
 
+.turf-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(255,255,255,0.18);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+.turf-card:hover::after {
+  opacity: 1;
+}
+
+.turf-card h3,
+.turf-card p {
+  color: #222;
+}
+
+.turf-card:hover h3,
+.turf-card:hover p {
+  color: #fff;
+}
 .turf-info {
   padding: 15px;
 }

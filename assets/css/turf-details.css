@@ -4,11 +4,9 @@
   box-sizing: border-box;
   font-family: Arial, sans-serif;
 }
-
 body {
-  background: #f4f6f8;
+  background: linear-gradient(120deg, #0b3d2e, #145a45);
 }
-
 /* NAVBAR */
 .navbar {
   background: #0b3d2e;
