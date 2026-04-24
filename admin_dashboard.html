@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - TurfKick</title>
+    <style>
+        :root {
+            --primary: #1f4037;
+            --secondary: #99f2c8;
+            --accent: #ffd700;
+            --danger: #ff5f6d;
+            --glass: rgba(255, 255, 255, 0.1);
+            --border: rgba(255, 255, 255, 0.15);
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            background-attachment: fixed;
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 5%; background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(30px); border-bottom: 1px solid var(--border);
+        }
+
+        .logo { font-size: 24px; font-weight: 900; color: var(--secondary); }
+
+        .dashboard-container { width: 90%; max-width: 1200px; margin: 40px auto; display: grid; grid-template-columns: 250px 1fr; gap: 30px; }
+
+        .sidebar { background: var(--glass); border-radius: 20px; padding: 20px; height: fit-content; }
+        .side-link { padding: 12px 20px; border-radius: 10px; margin-bottom: 8px; cursor: pointer; transition: 0.3s; opacity: 0.7; }
+        .side-link:hover, .side-link.active { background: rgba(255,255,255,0.1); opacity: 1; color: var(--secondary); }
+
+        .content-section { display: none; }
+        .content-section.active { display: block; }
+
+        .glass-card { background: var(--glass); backdrop-filter: blur(20px); border-radius: 20px; border: 1px solid var(--border); padding: 25px; margin-bottom: 20px; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th { text-align: left; padding: 12px; border-bottom: 1px solid var(--border); opacity: 0.6; font-size: 14px; }
+        td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
+
+        .btn { padding: 6px 12px; border-radius: 6px; border: none; font-size: 12px; cursor: pointer; font-weight: bold; margin-right: 5px; }
+        .btn-approve { background: #2ecc71; color: #fff; }
+        .btn-disable { background: var(--danger); color: #fff; }
+        .btn-cancel { background: var(--danger); color: #fff; }
+
+        .status-pill { padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+        .pill-active { background: rgba(46, 204, 113, 0.2); color: #2ecc71; }
+        .pill-pending { background: rgba(241, 196, 15, 0.2); color: #f1c40f; }
+        .pill-inactive { background: rgba(231, 76, 60, 0.2); color: #e74c3c; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">TurfKick Admin</div>
+        <div style="cursor: pointer; opacity: 0.7;" onclick="location.href='api/logout.php'">Logout</div>
+    </nav>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="side-link active" onclick="showSection('users', this)">Users</div>
+            <div class="side-link" onclick="showSection('turfs', this)">Turfs</div>
+            <div class="side-link" onclick="showSection('bookings', this)">Bookings</div>
+        </aside>
+
+        <main>
+            <section id="users" class="content-section active">
+                <div class="glass-card">
+                    <h2>Manage Users</h2>
+                    <table id="userTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Joined</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="turfs" class="content-section">
+                <div class="glass-card">
+                    <h2>Manage Turfs</h2>
+                    <table id="turfTable">
+                        <thead>
+                            <tr>
+                                <th>Turf Name</th>
+                                <th>Owner</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="bookings" class="content-section">
+                <div class="glass-card">
+                    <h2>All Bookings</h2>
+                    <table id="bookingTable">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Turf</th>
+                                <th>Date</th>
+                                <th>Slot</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/admin.js"></script>
+    <script>
+        function showSection(id, link) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.side-link').forEach(l => l.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            link.classList.add('active');
+            
+            if (id === 'users') TurfKickAdmin.fetchUsers();
+            if (id === 'turfs') TurfKickAdmin.fetchTurfs();
+            if (id === 'bookings') TurfKickAdmin.fetchBookings();
+        }
+    </script>
+</body>
+</html>

@@ -581,10 +581,11 @@
             <div class="tabs">
                 <div class="tab active" id="userTab" onclick="switchTab('user')">User</div>
                 <div class="tab" id="ownerTab" onclick="switchTab('owner')">Owner</div>
+                <div class="tab" id="adminTab" onclick="switchTab('admin')">Admin</div>
             </div>
 
             <!-- USER LOGIN -->
-            <form id="userLogin" class="form" action="auth/login.php" method="POST">
+            <form id="userLogin" class="form">
                 <input type="hidden" name="role" value="user">
                 <h2 style="margin-bottom: 25px; text-align: center;">User Login</h2>
                 <div class="form-group">
@@ -602,7 +603,7 @@
             </form>
 
             <!-- OWNER LOGIN -->
-            <form id="ownerLogin" class="form hidden" action="auth/login.php" method="POST">
+            <form id="ownerLogin" class="form hidden">
                 <input type="hidden" name="role" value="owner">
                 <h2 style="margin-bottom: 25px; text-align: center;">Owner Login</h2>
                 <div class="form-group">
@@ -617,6 +618,21 @@
                 <div class="switch">
                     Want to list your turf? <span onclick="goToOwnerRegister()">Register as Owner</span>
                 </div>
+            </form>
+
+            <!-- ADMIN LOGIN -->
+            <form id="adminLogin" class="form hidden">
+                <input type="hidden" name="role" value="admin">
+                <h2 style="margin-bottom: 25px; text-align: center;">Admin Login</h2>
+                <div class="form-group">
+                    <label>Admin Email</label>
+                    <input type="email" name="email" placeholder="admin@turfkick.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="login-btn">Login as Admin</button>
             </form>
         </div>
     </div>
@@ -652,6 +668,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             TurfKickAuth.submitForm('userLogin', 'api/login.php');
             TurfKickAuth.submitForm('ownerLogin', 'api/login.php');
+            TurfKickAuth.submitForm('adminLogin', 'api/login.php');
         });
 
         function requireLogin() {
@@ -685,22 +702,19 @@
         }
 
         function switchTab(type) {
-            const userTab = document.getElementById("userTab");
-            const ownerTab = document.getElementById("ownerTab");
-            const userForm = document.getElementById("userLogin");
-            const ownerForm = document.getElementById("ownerLogin");
-
-            if (type === "user") {
-                userTab.classList.add("active");
-                ownerTab.classList.remove("active");
-                userForm.classList.remove("hidden");
-                ownerForm.classList.add("hidden");
-            } else {
-                ownerTab.classList.add("active");
-                userTab.classList.remove("active");
-                ownerForm.classList.remove("hidden");
-                userForm.classList.add("hidden");
-            }
+            const tabs = ['user', 'owner', 'admin'];
+            tabs.forEach(tab => {
+                const el = document.getElementById(tab + 'Tab');
+                const form = document.getElementById(tab + 'Login');
+                if (!el || !form) return;
+                if (tab === type) {
+                    el.classList.add('active');
+                    form.classList.remove('hidden');
+                } else {
+                    el.classList.remove('active');
+                    form.classList.add('hidden');
+                }
+            });
         }
 
         /* FILTER FUNCTION */

@@ -56,6 +56,15 @@ function is_admin() {
 }
 
 /**
+ * Block access if not an admin.
+ */
+function require_admin() {
+    if (!is_logged_in() || $_SESSION['role'] !== 'admin') {
+        send_json_response('error', 'Access denied. Administrator privileges required.');
+    }
+}
+
+/**
  * Sanitize input data.
  */
 function sanitize_input($data) {

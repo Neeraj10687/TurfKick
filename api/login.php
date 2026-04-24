@@ -32,7 +32,12 @@ try {
         $_SESSION['user_name'] = $user['name'];
         $_SESSION['role'] = $user['role'];
 
-        $redirect = ($user['role'] === 'owner') ? 'owner_dashboard.html' : 'browse_turfs.html';
+        $redirect = 'browse_turfs.html';
+        if ($user['role'] === 'owner') {
+            $redirect = 'owner_dashboard.html';
+        } elseif ($user['role'] === 'admin') {
+            $redirect = 'admin_dashboard.html';
+        }
         
         send_json_response('success', 'Login successful.', ['redirect' => $redirect]);
     } else {
