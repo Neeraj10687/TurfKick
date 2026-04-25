@@ -41,10 +41,12 @@ try {
     if ($role === 'owner') {
         if (isset($_FILES['aadhaar']) && $_FILES['aadhaar']['error'] === UPLOAD_ERR_OK) {
             $aadhaar_path = 'uploads/' . time() . '_' . $_FILES['aadhaar']['name'];
+            if (!is_dir('../uploads')) mkdir('../uploads', 0777, true);
             move_uploaded_file($_FILES['aadhaar']['tmp_name'], '../' . $aadhaar_path);
         }
         if (isset($_FILES['license']) && $_FILES['license']['error'] === UPLOAD_ERR_OK) {
             $license_path = 'uploads/' . time() . '_' . $_FILES['license']['name'];
+            if (!is_dir('../uploads')) mkdir('../uploads', 0777, true);
             move_uploaded_file($_FILES['license']['tmp_name'], '../' . $license_path);
         }
     }

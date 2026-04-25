@@ -79,3 +79,6 @@ const TurfKickOwner = {
 document.addEventListener('DOMContentLoaded', () => {
     TurfKickOwner.init();
 });
+
+// Expose to global scope for HTML
+window.saveTurf = () => TurfKickOwner.saveTurf();

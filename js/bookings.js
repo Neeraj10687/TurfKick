@@ -267,3 +267,9 @@ const TurfKickBookings = {
 document.addEventListener('DOMContentLoaded', () => {
     TurfKickBookings.init();
 });
+
+// Expose to global scope for HTML onclick events
+window.bookNow = () => TurfKickBookings.bookNow();
+window.closeModal = (id) => TurfKickBookings.closeModal(id);
+window.openModal = (id) => TurfKickBookings.openModal(id);
+window.renderLogs = () => TurfKickBookings.renderLogs();

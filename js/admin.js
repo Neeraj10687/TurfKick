@@ -134,3 +134,7 @@ const TurfKickAdmin = {
 document.addEventListener('DOMContentLoaded', () => {
     TurfKickAdmin.init();
 });
+
+// Expose to global scope for HTML
+window.toggleTurf = (id, status) => TurfKickAdmin.toggleTurf(id, status);
+window.cancelBooking = (id) => TurfKickAdmin.cancelBooking(id);
