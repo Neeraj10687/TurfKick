@@ -38,6 +38,7 @@ try {
     // Handle file uploads for owners
     $aadhaar_path = '';
     $license_path = '';
+    $primary_image_path = '';
     if ($role === 'owner') {
         if (isset($_FILES['aadhaar']) && $_FILES['aadhaar']['error'] === UPLOAD_ERR_OK) {
             $aadhaar_path = 'uploads/' . time() . '_' . $_FILES['aadhaar']['name'];
@@ -49,6 +50,19 @@ try {
             if (!is_dir('../uploads')) mkdir('../uploads', 0777, true);
             move_uploaded_file($_FILES['license']['tmp_name'], '../' . $license_path);
         }
+        if (isset($_FILES['images']) && is_array($_FILES['images']['name'])) {
+            foreach ($_FILES['images']['name'] as $key => $image_name) {
+                if ($_FILES['images']['error'][$key] === UPLOAD_ERR_OK) {
+                    $img_path = 'uploads/' . time() . '_' . $key . '_' . basename($image_name);
+                    if (!is_dir('../uploads')) mkdir('../uploads', 0777, true);
+                    if (move_uploaded_file($_FILES['images']['tmp_name'][$key], '../' . $img_path)) {
+                        if (empty($primary_image_path)) {
+                            $primary_image_path = $img_path; // Store first image as primary
+                        }
+                    }
+                }
+            }
+        }
     }
 
     // Insert user
@@ -58,8 +72,8 @@ try {
 
     // If owner, create initial turf entry
     if ($role === 'owner' && !empty($turf_name)) {
-        $stmt = $pdo->prepare("INSERT INTO turfs (owner_id, name, location, sport_category, price_per_hour) VALUES (?, ?, 'Not Specified', 'Multi-Sport', 0)");
-        $stmt->execute([$user_id, $turf_name]);
+        $stmt = $pdo->prepare("INSERT INTO turfs (owner_id, name, location, sport_category, price_per_hour, image_path) VALUES (?, ?, 'Not Specified', 'Multi-Sport', 0, ?)");
+        $stmt->execute([$user_id, $turf_name, $primary_image_path]);
     }
 
     $pdo->commit();

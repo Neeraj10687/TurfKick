@@ -71,15 +71,28 @@ const TurfKickBookings = {
         const container = document.getElementById('listings');
         if (!container) return;
 
-        const filtered = this.turfs.filter(t => {
+        // Get filter and sort values
+        const sportFilter = this.currentFilter || 'all';
+        const sortType = document.getElementById('sortSelect')?.value || 'none';
+
+        let filtered = this.turfs.filter(t => {
             const matchesSearch = t.name.toLowerCase().includes(query) || t.location.toLowerCase().includes(query);
-            // Add filter logic here if needed
-            return matchesSearch;
+            const matchesSport = sportFilter === 'all' || t.sport_category === sportFilter;
+            return matchesSearch && matchesSport;
         });
+
+        // Sorting logic
+        if (sortType === 'price_low') {
+            filtered.sort((a, b) => a.price_per_hour - b.price_per_hour);
+        } else if (sortType === 'price_high') {
+            filtered.sort((a, b) => b.price_per_hour - a.price_per_hour);
+        }
 
         container.innerHTML = filtered.map(t => `
             <div class="card" onclick="TurfKickBookings.openTurf(${t.id})">
-                <div class="card-img"><img src="${t.image_path || 'https://images.unsplash.com/photo-1508098682722-e99c643e7f0b?auto=format&fit=crop&w=800&q=80'}"></div>
+                <div class="card-img">
+                    <img src="${t.image_path || 'https://images.unsplash.com/photo-1508098682722-e99c643e7f0b?auto=format&fit=crop&w=800&q=80'}" alt="${t.name}">
+                </div>
                 <div class="card-body">
                     <h3 style="margin:0;">${t.name}</h3>
                     <p style="opacity:0.6; font-size:13px; margin:5px 0;">📍 ${t.location}</p>
@@ -90,17 +103,36 @@ const TurfKickBookings = {
         `).join('');
     },
 
+    setFilter(sport, btn) {
+        this.currentFilter = sport;
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.renderTurfs();
+    },
+
     async openTurf(id) {
         const turf = this.turfs.find(t => t.id == id);
         if (!turf) return;
 
-        document.getElementById('modalImg').style.backgroundImage = `url(${turf.image_path || 'https://images.unsplash.com/photo-1508098682722-e99c643e7f0b?auto=format&fit=crop&w=800&q=80'})`;
+        const imgSrc = turf.image_path || 'https://images.unsplash.com/photo-1508098682722-e99c643e7f0b?auto=format&fit=crop&w=800&q=80';
+        document.getElementById('modalImg').style.backgroundImage = `url(${imgSrc})`;
         document.getElementById('modalName').innerText = turf.name;
         document.getElementById('modalLoc').innerText = turf.location;
         document.getElementById('modalRating').innerText = `⭐ 4.5`;
 
+        this.selectedTurfId = id;
+        
+        // Initialize date picker
+        const dateInput = document.getElementById('bookingDate');
+        if (dateInput && !dateInput.value) {
+            dateInput.value = new Date().toISOString().split('T')[0];
+        }
+
         // Fetch slots for this turf
         await this.renderSlots(id);
+        
+        // Fetch equipment for this turf
+        await this.renderEquipment(id);
 
         document.getElementById('bookingContext').style.display = 'block';
         document.getElementById('statusContext').style.display = 'none';
@@ -112,7 +144,9 @@ const TurfKickBookings = {
 
     async renderSlots(turfId) {
         try {
-            const response = await fetch(`api/get_slots.php?turf_id=${turfId}`);
+            const dateInput = document.getElementById('bookingDate');
+            const date = dateInput ? dateInput.value : new Date().toISOString().split('T')[0];
+            const response = await fetch(`api/get_slots.php?turf_id=${turfId}&date=${date}`);
             const result = await response.json();
             const container = document.getElementById('modalSlots');
             
@@ -131,6 +165,27 @@ const TurfKickBookings = {
         }
     },
 
+    async renderEquipment(turfId) {
+        try {
+            const response = await fetch(`api/get_equipment.php?turf_id=${turfId}`);
+            const result = await response.json();
+            const container = document.getElementById('accStore');
+            
+            if (result.status === 'success' && result.data.length > 0) {
+                container.innerHTML = result.data.map(item => `
+                    <div class="acc-item">
+                        <span>⚽ ${item.name}</span>
+                        <label><input type="checkbox" value="${item.id}"> +₹${item.price_per_session}</label>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = '<p style="opacity:0.5; font-size:12px;">No additional equipment available for this turf.</p>';
+            }
+        } catch (error) {
+            console.error('Error fetching equipment:', error);
+        }
+    },
+
     selectSlot(el, turfId, slotId) {
         document.querySelectorAll('.slot').forEach(s => s.classList.remove('selected'));
         el.classList.add('selected');
@@ -142,7 +197,8 @@ const TurfKickBookings = {
     },
 
     async checkAvailability(turfId, slotId) {
-        const date = new Date().toISOString().split('T')[0]; // For demo, use today
+        const dateInput = document.getElementById('bookingDate');
+        const date = dateInput ? dateInput.value : new Date().toISOString().split('T')[0];
         try {
             const response = await fetch(`api/check_availability.php?turf_id=${turfId}&slot_id=${slotId}&date=${date}`);
             const result = await response.json();
@@ -161,13 +217,21 @@ const TurfKickBookings = {
         if (!this.selectedSlotId) return alert("Select a time slot!");
 
         const turf = this.turfs.find(t => t.id == this.selectedTurfId);
-        const date = new Date().toISOString().split('T')[0];
+        const dateInput = document.getElementById('bookingDate');
+        const date = dateInput ? dateInput.value : new Date().toISOString().split('T')[0];
+
+        // Collect selected equipment
+        const selectedEquipment = [];
+        document.querySelectorAll('#accStore input[type="checkbox"]:checked').forEach(cb => {
+            selectedEquipment.push(cb.value);
+        });
 
         const formData = new FormData();
         formData.append('turf_id', this.selectedTurfId);
         formData.append('slot_id', this.selectedSlotId);
         formData.append('date', date);
         formData.append('price', turf.price_per_hour);
+        formData.append('equipment_ids', JSON.stringify(selectedEquipment));
         formData.append('csrf_token', this.csrfToken);
 
         try {

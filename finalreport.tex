@@ -1,0 +1,319 @@
+\documentclass[12pt]{report}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+\usepackage{longtable}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstset{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\onehalfspacing
+
+\begin{document}
+
+% ------------ 1. COVER PAGE ------------
+\begin{titlepage}
+    \centering
+    \vspace*{1cm}
+    
+    {\huge \textbf{TurfKick -- Turf Booking Platform} \par}
+    \vspace{1.5cm}
+    
+    {\large \textbf{PROJECT REPORT} \par}
+    \vspace{0.5cm}
+    {\large \textit{Submitted in partial fulfillment of the requirements for the award of degree of} \par}
+    \vspace{0.5cm}
+    {\large \textbf{MASTER OF COMPUTER APPLICATION} \par}
+    
+    \vspace{1.5cm}
+    {\large \textbf{TEAM MEMBERS:} \par}
+    \vspace{0.5cm}
+    \begin{tabular}{ll}
+        Navneeth Krishna & (25MCA041) \\
+        Neeraj N & (25MCA042) \\
+        Nehmal N & (25MCA043) \\
+        Nidhish Chandran & (25MCA044) \\
+    \end{tabular}
+    
+    \vfill
+    \begin{center}
+        \includegraphics[width=0.3\textwidth]{turf1.png} % Assuming an image exists or placeholder
+    \end{center}
+    \vfill
+    
+    {\large \textbf{Department of Computer Applications} \par}
+    {\large \textbf{Thangal Kunju Musaliar College of Engineering} \par}
+    {\large \textbf{Kollam, Kerala} \par}
+    \vspace{0.5cm}
+    {\large Affiliated to APJ Abdul Kalam Technological University \par}
+    \vspace{1cm}
+    {\large \textbf{April 2026} \par}
+\end{titlepage}
+
+% ------------ 2. CERTIFICATE PAGE ------------
+\newpage
+\thispagestyle{empty}
+\begin{center}
+    {\huge \textbf{CERTIFICATE} \par}
+    \vspace{2cm}
+    \begin{center}
+        \setstretch{2.0}
+        This is to certify that the project report entitled \textbf{``TurfKick -- Turf Booking Platform''} is a bona fide record of the work carried out by \textbf{Navneeth Krishna (25MCA041), Neeraj N (25MCA042), Nehmal N (25MCA043), and Nidhish Chandran (25MCA044)} in partial fulfillment of the requirements for the award of the degree of Master of Computer Application under APJ Abdul Kalam Technological University during the year 2026.
+    \end{center}
+\end{center}
+
+\vspace{3cm}
+\begin{flushleft}
+    \textbf{Project Coordinator} \hfill \textbf{Head of the Department}
+\end{flushleft}
+
+% ------------ 3. DECLARATION PAGE ------------
+\newpage
+\begin{center}
+    {\huge \textbf{DECLARATION} \par}
+\end{center}
+\vspace{2cm}
+\setstretch{1.5}
+We, \textbf{Navneeth Krishna, Neeraj N, Nehmal N, and Nidhish Chandran}, students of Master of Computer Application, Thangal Kunju Musaliar College of Engineering, Kollam, hereby declare that the project report entitled \textbf{``TurfKick -- Turf Booking Platform''} is an original work done by us and has not been submitted to any other University or Institution for the award of any degree or diploma.
+
+\vspace{2cm}
+\begin{flushleft}
+    Date: 26-04-2026 \\
+    Place: Kollam
+\end{flushleft}
+\hfill
+\begin{tabular}{c}
+    (Signature) \\
+    Navneeth Krishna \\
+    Neeraj N \\
+    Nehmal N \\
+    Nidhish Chandran \\
+\end{tabular}
+
+% ------------ 4. TABLE OF CONTENTS ------------
+\newpage
+\tableofcontents
+
+% ------------ 5. INDEX TABLE ------------
+\newpage
+\begin{center}
+    {\huge \textbf{INDEX TABLE} \par}
+\end{center}
+\vspace{1cm}
+\begin{longtable}{|c|l|c|}
+\hline
+\textbf{SI NO.} & \textbf{PARTICULARS} & \textbf{PAGE NO.} \\
+\hline
+1 & Introduction & \pageref{chap:intro} \\
+\hline
+2 & Background & \pageref{chap:background} \\
+\hline
+3 & Methodology & \pageref{chap:method} \\
+\hline
+4 & Result and Discussion & \pageref{chap:result} \\
+\hline
+5 & Future Enhancement & \pageref{chap:future} \\
+\hline
+6 & Conclusion & \pageref{chap:conclusion} \\
+\hline
+7 & References & \pageref{chap:ref} \\
+\hline
+\end{longtable}
+
+% ------------ 6. MAIN CONTENT ------------
+
+\chapter{INTRODUCTION}
+\label{chap:intro}
+
+\section{Motivation}
+In recent years, the popularity of sports like football and cricket has led to a massive increase in the number of synthetic turfs. However, the process of finding and booking these turfs remains largely manual, involving phone calls or physical visits. This often results in double bookings, confusion over availability, and wasted time for both players and turf owners. TurfKick is motivated by the need to digitize this process, providing a seamless, real-time platform for sports enthusiasts to book their favorite slots with ease.
+
+\section{Real-world Problem}
+Traditional turf booking systems are plagued by:
+\begin{itemize}
+    \item Lack of real-time availability updates.
+    \item Manual record-keeping leading to errors.
+    \item Difficulty for owners to manage multiple bookings and payments.
+    \item No centralized platform for users to compare prices and locations.
+\end{itemize}
+
+\section{Problem Statement}
+To design and develop a web-based application, ``TurfKick'', that allows users to browse available turfs, check real-time time slots, book sessions, and allows turf owners to manage their facilities, bookings, and equipment efficiently.
+
+\section{Objectives}
+\begin{itemize}
+    \item Provide a user-friendly interface for browsing turfs based on location and sport.
+    \item Implement a robust booking system with slot management.
+    \item Develop an admin dashboard for platform oversight.
+    \item Create an owner dashboard for facility and equipment management.
+    \item Ensure secure user authentication and data integrity.
+\end{itemize}
+
+\section{GitHub Repository}
+The source code for this project is hosted at: \\
+\url{https://github.com/Nidhish-Chandran/turfkick_turfbookingplatform.git}
+
+\chapter{BACKGROUND}
+\label{chap:background}
+
+The purpose of this section is to provide an overview of the core technologies utilized in the development of TurfKick. Understanding these technologies is essential for grasping how the system operates from front-to-back.
+
+\section{HTML (HyperText Markup Language)}
+HTML is the standard markup language used to create the structure of web pages. In TurfKick, HTML provides the backbone for all pages, including the user registration forms, the turf browsing gallery, and the management dashboards. It defines elements like headers, sections, buttons, and input fields that users interact with.
+
+\section{CSS (Cascading Style Sheets)}
+CSS is used for styling the HTML structure. It controls the visual presentation, including layout, colors, fonts, and responsiveness. TurfKick uses CSS to ensure that the platform looks professional and is usable across different devices (desktop, tablet, and mobile).
+
+\section{JavaScript}
+JavaScript is a client-side scripting language used to make web pages interactive. In this project, JavaScript is heavily used for:
+\begin{itemize}
+    \item Form validation (checking if fields are empty before submission).
+    \item Fetching data from the server using AJAX/Fetch API without reloading the page.
+    \item Handling dynamic UI elements like showing/hiding slots based on availability.
+\end{itemize}
+
+\section{PHP (Hypertext Preprocessor)}
+PHP is a server-side scripting language that handles the application logic. It acts as the bridge between the user interface and the database. PHP scripts in TurfKick process requests from the frontend, communicate with the MySQL database to retrieve or store information, and send back responses in JSON format. It is responsible for session management, authentication, and secure data handling using PDO (PHP Data Objects).
+
+\section{MySQL}
+MySQL is a Relational Database Management System (RDBMS) used to store all project data. It organizes information into tables like \texttt{users}, \texttt{turfs}, \texttt{bookings}, and \texttt{time\_slots}. MySQL ensures data persistence and allows complex queries to fetch available slots for a specific date and turf.
+
+\section{End-to-End Flow Example}
+The following example demonstrates how a simple user registration flow works across all layers:
+
+\begin{enumerate}
+    \item \textbf{HTML:} User fills out a registration form.
+    \item \textbf{CSS:} Styles the form for a clean UI.
+    \item \textbf{JS:} Validates the inputs and sends a POST request to the server.
+    \item \textbf{PHP:} Receives the data, hashes the password, and inserts it into the database.
+    \item \textbf{MySQL:} Stores the record in the \texttt{users} table.
+\end{enumerate}
+
+\begin{lstlisting}[language=HTML, caption=Demonstration Flow (Conceptual)]
+<!-- HTML: Registration Form -->
+<form id="regForm">
+  <input type="text" name="name" id="name" required>
+  <button type="submit">Register</button>
+</form>
+
+<!-- JS: AJAX Request -->
+<script>
+document.getElementById('regForm').onsubmit = async (e) => {
+    e.preventDefault();
+    const data = new FormData(e.target);
+    const res = await fetch('register.php', { method: 'POST', body: data });
+    const result = await res.json();
+    alert(result.message);
+};
+</script>
+
+<?php
+// PHP: Processing (register.php)
+$name = $_POST['name'];
+// Logic to connect to DB and Insert
+// INSERT INTO users (name) VALUES ('$name');
+echo json_encode(['message' => 'User Registered Successfully!']);
+?>
+\end{lstlisting}
+
+\chapter{METHODOLOGY}
+\label{chap:method}
+
+\section{Flow Chart}
+The application follows a structured data flow:
+\begin{enumerate}
+    \item \textbf{User Interaction:} The user visits the website and navigates through HTML pages.
+    \item \textbf{Input \& Validation:} The user submits a form (login, booking, etc.). JavaScript validates the input to ensure correctness.
+    \item \textbf{Request Handling:} If valid, JavaScript uses the Fetch API to send a request to a PHP endpoint (e.g., \texttt{api/create\_booking.php}).
+    \item \textbf{Backend Processing:} The PHP script checks user sessions, validates CSRF tokens, and processes the request.
+    \item \textbf{Database Interaction:} PHP executes SQL queries against the MySQL database to read or write data.
+    \item \textbf{Response:} The server returns a JSON response (Success/Error).
+    \item \textbf{UI Update:} JavaScript receives the response and updates the UI (e.g., redirecting the user or showing a success message).
+\end{enumerate}
+
+\section{Utilized Technologies}
+\begin{itemize}
+    \item \textbf{Frontend:} Developed using HTML5, CSS3, and Vanilla JavaScript.
+    \item \textbf{Backend:} Built with PHP 8.x using PDO for secure database interactions.
+    \item \textbf{Database:} MySQL 8.0 for storing relational data.
+    \item \textbf{Communication:} JSON is used as the standard data exchange format between frontend and backend.
+    \item \textbf{Security:} Password hashing (Bcrypt), CSRF protection, and input sanitization are implemented.
+\end{itemize}
+
+\chapter{RESULT AND DISCUSSION}
+\label{chap:result}
+
+\section{System Design / Source Structure}
+The project is organized into a modular directory structure:
+\begin{itemize}
+    \item \textbf{Root Directory:} Contains the main HTML pages (\texttt{index.html}, \texttt{browse\_turfs.html}, etc.) and configuration files.
+    \item \textbf{api/:} Contains all backend PHP logic categorized into general, admin, and owner-specific endpoints.
+    \item \textbf{config/:} Contains \texttt{db.php} for database connection settings.
+    \item \textbf{css/:} Contains stylesheets for global styling and specific module layouts.
+    \item \textbf{includes/:} Contains helper functions used across the application.
+    \item \textbf{js/:} Contains JavaScript files for authentication, booking logic, and dashboard interactivity.
+    \item \textbf{uploads/:} Stores uploaded documents and turf images.
+\end{itemize}
+
+\section{Backend Flow}
+The backend logic is strictly separated from the frontend. PHP scripts only output JSON, allowing for a decoupled architecture that is easy to maintain and scale. For example, \texttt{api/get\_slots.php} fetches available time slots based on a \texttt{turf\_id} and \texttt{date}, which is then rendered by JavaScript on the booking page.
+
+\section{Output}
+\begin{itemize}
+    \item \textbf{User Experience:} Users can seamlessly register, log in, and browse turfs by location. The booking process is intuitive, showing real-time slot availability.
+    \item \textbf{Owner Experience:} Owners have full control over their turf listings, can add/edit time slots, and manage equipment rentals.
+    \item \textbf{Admin Control:} Admins can approve or deactivate turfs and manage all platform users.
+\end{itemize}
+
+\chapter{FUTURE ENHANCEMENT}
+\label{chap:future}
+While the current version of TurfKick provides a solid foundation, several enhancements can be made in the future:
+\begin{itemize}
+    \item \textbf{Payment Gateway Integration:} Integrating real payment APIs like Razorpay or Stripe for actual monetary transactions.
+    \item \textbf{Mobile Application:} Developing a native mobile app for Android and iOS using Flutter or React Native.
+    \item \textbf{Rating \& Review System:} Allowing users to rate turfs and provide feedback to help other players.
+    \item \textbf{Map Integration:} Integrating Google Maps to help users find the exact location of the turfs.
+    \item \textbf{Push Notifications:} Sending reminders for upcoming bookings via SMS or Push notifications.
+\end{itemize}
+
+\chapter{CONCLUSION}
+\label{chap:conclusion}
+The TurfKick project successfully demonstrates the development of a modern, data-driven web application for sports facility management. By leveraging technologies like HTML, CSS, JavaScript, PHP, and MySQL, we have created a platform that addresses the real-world problem of manual turf booking. The project provides a streamlined experience for players, owners, and administrators alike, ensuring efficiency and transparency in the booking process.
+
+\chapter{REFERENCES}
+\label{chap:ref}
+\begin{itemize}
+    \item PHP Official Documentation: \url{https://www.php.net/docs.php}
+    \item MySQL Reference Manual: \url{https://dev.mysql.com/doc/}
+    \item MDN Web Docs (HTML, CSS, JS): \url{https://developer.mozilla.org/}
+    \item Project Source Code: \url{https://github.com/Nidhish-Chandran/turfkick_turfbookingplatform.git}
+\end{itemize}
+
+\end{document}
