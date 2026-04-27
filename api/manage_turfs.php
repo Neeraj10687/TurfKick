@@ -50,7 +50,7 @@ if ($method === 'GET') {
 
     if ($action === 'add') {
         try {
-            $stmt = $pdo->prepare("INSERT INTO turfs (owner_id, name, price_per_hour, location, sport_category, description, status) VALUES (?, ?, ?, ?, ?, ?, 'active')");
+            $stmt = $pdo->prepare("INSERT INTO turfs (owner_id, name, price_per_hour, location, sport_category, description, status) VALUES (?, ?, ?, ?, ?, ?, 'pending')");
             $stmt->execute([$owner_id, $name, $price, $location, $category, $description]);
             $new_id = $pdo->lastInsertId();
             
