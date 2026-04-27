@@ -24,7 +24,7 @@ const TurfKickAdmin = {
 
     async fetchUsers() {
         try {
-            const response = await fetch('api/admin/get_users.php');
+            const response = await fetch('api/admin/get_all_users.php');
             const result = await response.json();
             const tbody = document.querySelector('#userTable tbody');
             if (result.status === 'success') {
@@ -34,6 +34,9 @@ const TurfKickAdmin = {
                         <td>${u.email}</td>
                         <td>${u.role}</td>
                         <td>${u.created_at}</td>
+                        <td>
+                            <button class="btn btn-disable" onclick="TurfKickAdmin.deleteUser(${u.id})">Delete</button>
+                        </td>
                     </tr>
                 `).join('');
             }
@@ -42,9 +45,31 @@ const TurfKickAdmin = {
         }
     },
 
+    async deleteUser(userId) {
+        if (!confirm("Are you sure you want to delete this user? This will also remove their turfs and bookings.")) return;
+
+        const formData = new FormData();
+        formData.append('user_id', userId);
+        formData.append('csrf_token', this.csrfToken);
+
+        try {
+            const response = await fetch('api/admin/delete_user.php', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            alert(result.message);
+            if (result.status === 'success') {
+                this.fetchUsers();
+            }
+        } catch (error) {
+            console.error('Error deleting user:', error);
+        }
+    },
+
     async fetchTurfs() {
         try {
-            const response = await fetch('api/admin/get_turfs.php');
+            const response = await fetch('api/admin/get_all_turfs.php');
             const result = await response.json();
             const tbody = document.querySelector('#turfTable tbody');
             if (result.status === 'success') {
@@ -55,9 +80,10 @@ const TurfKickAdmin = {
                         <td>${t.location}</td>
                         <td><span class="status-pill pill-${t.status}">${t.status}</span></td>
                         <td>
-                            ${t.status === 'pending' ? `<button class="btn btn-approve" onclick="TurfKickAdmin.toggleTurf(${t.id}, 'active')">Approve</button>` : ''}
-                            ${t.status === 'active' ? `<button class="btn btn-disable" onclick="TurfKickAdmin.toggleTurf(${t.id}, 'inactive')">Disable</button>` : ''}
-                            ${t.status === 'inactive' ? `<button class="btn btn-approve" onclick="TurfKickAdmin.toggleTurf(${t.id}, 'active')">Enable</button>` : ''}
+                            ${t.status === 'pending' ? `<button class="btn btn-approve" onclick="TurfKickAdmin.approveTurf(${t.id})">Approve</button>` : ''}
+                            ${t.status === 'pending' ? `<button class="btn btn-disable" onclick="TurfKickAdmin.rejectTurf(${t.id})">Reject</button>` : ''}
+                            ${t.status === 'inactive' ? `<button class="btn btn-approve" onclick="TurfKickAdmin.approveTurf(${t.id})">Approve</button>` : ''}
+                            ${t.status === 'active' ? `<button class="btn btn-disable" onclick="TurfKickAdmin.rejectTurf(${t.id})">Reject</button>` : ''}
                         </td>
                     </tr>
                 `).join('');
@@ -67,28 +93,49 @@ const TurfKickAdmin = {
         }
     },
 
-    async toggleTurf(turfId, status) {
+    async approveTurf(turfId) {
         const formData = new FormData();
         formData.append('turf_id', turfId);
-        formData.append('status', status);
         formData.append('csrf_token', this.csrfToken);
 
         try {
-            const response = await fetch('api/admin/toggle_turf.php', {
+            const response = await fetch('api/admin/approve_turf.php', {
                 method: 'POST',
                 body: formData
             });
             const result = await response.json();
             alert(result.message);
-            this.fetchTurfs();
+            if (result.status === 'success') {
+                this.fetchTurfs();
+            }
         } catch (error) {
-            console.error('Error toggling turf:', error);
+            console.error('Error approving turf:', error);
+        }
+    },
+
+    async rejectTurf(turfId) {
+        const formData = new FormData();
+        formData.append('turf_id', turfId);
+        formData.append('csrf_token', this.csrfToken);
+
+        try {
+            const response = await fetch('api/admin/reject_turf.php', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            alert(result.message);
+            if (result.status === 'success') {
+                this.fetchTurfs();
+            }
+        } catch (error) {
+            console.error('Error rejecting turf:', error);
         }
     },
 
     async fetchBookings() {
         try {
-            const response = await fetch('api/admin/get_bookings.php');
+            const response = await fetch('api/admin/get_all_bookings.php');
             const result = await response.json();
             const tbody = document.querySelector('#bookingTable tbody');
             if (result.status === 'success') {
@@ -124,7 +171,9 @@ const TurfKickAdmin = {
             });
             const result = await response.json();
             alert(result.message);
-            this.fetchBookings();
+            if (result.status === 'success') {
+                this.fetchBookings();
+            }
         } catch (error) {
             console.error('Error cancelling booking:', error);
         }
@@ -136,5 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Expose to global scope for HTML
-window.toggleTurf = (id, status) => TurfKickAdmin.toggleTurf(id, status);
+window.approveTurf = (id) => TurfKickAdmin.approveTurf(id);
+window.rejectTurf = (id) => TurfKickAdmin.rejectTurf(id);
+window.deleteUser = (id) => TurfKickAdmin.deleteUser(id);
 window.cancelBooking = (id) => TurfKickAdmin.cancelBooking(id);
