@@ -11,8 +11,7 @@ $owner_id = $_SESSION['user_id'];
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'GET') {
-    try {
-        $stmt = $pdo->prepare("SELECT * FROM equipment WHERE owner_id = ?");
+        $stmt = $pdo->prepare("SELECT e.*, t.name as turf_name FROM equipment e LEFT JOIN turfs t ON e.turf_id = t.id WHERE e.owner_id = ?");
         $stmt->execute([$owner_id]);
         $items = $stmt->fetchAll();
         send_json_response('success', 'Equipment fetched successfully.', $items);
@@ -30,10 +29,11 @@ if ($method === 'GET') {
     if ($action === 'add') {
         $name = sanitize_input($_POST['name'] ?? '');
         $price = sanitize_input($_POST['price'] ?? 0);
+        $turf_id = sanitize_input($_POST['turf_id'] ?? 0);
 
         try {
-            $stmt = $pdo->prepare("INSERT INTO equipment (owner_id, name, price_per_session) VALUES (?, ?, ?)");
-            $stmt->execute([$owner_id, $name, $price]);
+            $stmt = $pdo->prepare("INSERT INTO equipment (owner_id, turf_id, name, price_per_session) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$owner_id, $turf_id, $name, $price]);
             send_json_response('success', 'Equipment added successfully.');
         } catch (Exception $e) {
             send_json_response('error', 'Add failed: ' . $e->getMessage());

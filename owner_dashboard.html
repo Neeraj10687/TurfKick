@@ -196,6 +196,10 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label>Available Days (Comma separated)</label>
+                            <input type="text" id="add_turfDays" value="Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday">
+                        </div>
+                        <div class="form-group">
                             <label>Location / Address</label>
                             <input type="text" id="add_turfLoc" placeholder="City, State">
                         </div>
@@ -405,6 +409,12 @@
             <div class="form-group">
                 <label>Rental Price (₹)</label>
                 <input type="number" id="itemPrice" placeholder="0">
+            </div>
+            <div class="form-group">
+                <label>Assign to Turf</label>
+                <select id="itemTurfId">
+                    <!-- Populated via JS -->
+                </select>
             </div>
             <div style="display: flex; gap: 15px; margin-top: 20px;">
                 <button class="btn btn-primary" style="flex: 1;" onclick="addEquipment()">Add Item</button>

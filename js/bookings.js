@@ -88,7 +88,9 @@ const TurfKickBookings = {
             filtered.sort((a, b) => b.price_per_hour - a.price_per_hour);
         }
 
-        container.innerHTML = filtered.map(t => `
+        container.innerHTML = filtered.map(t => {
+            const availDays = t.available_days ? t.available_days.split(',').map(d => d.substring(0,3)).join(', ') : 'All Days';
+            return `
             <div class="card" onclick="TurfKickBookings.openTurf(${t.id})">
                 <div class="card-img">
                     <img src="${t.image_path || 'https://images.unsplash.com/photo-1508098682722-e99c643e7f0b?auto=format&fit=crop&w=800&q=80'}" alt="${t.name}">
@@ -96,11 +98,13 @@ const TurfKickBookings = {
                 <div class="card-body">
                     <h3 style="margin:0;">${t.name}</h3>
                     <p style="opacity:0.6; font-size:13px; margin:5px 0;">📍 ${t.location}</p>
+                    <p style="opacity:0.8; font-size:12px; color: var(--secondary); margin:5px 0;">📅 ${availDays}</p>
                     <div style="color:var(--accent);">⭐ 4.5</div>
                     <div class="card-price">₹${t.price_per_hour} <small>/ hr</small></div>
                 </div>
             </div>
-        `).join('');
+            `;
+        }).join('');
     },
 
     setFilter(sport, btn) {

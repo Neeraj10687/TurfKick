@@ -21,9 +21,9 @@ try {
 
     $owner_id = $turf['owner_id'];
 
-    // Now fetch equipment for this owner
-    $stmt = $pdo->prepare("SELECT * FROM equipment WHERE owner_id = ? AND status = 'active'");
-    $stmt->execute([$owner_id]);
+    // Now fetch equipment for this turf
+    $stmt = $pdo->prepare("SELECT * FROM equipment WHERE turf_id = ? AND status = 'active'");
+    $stmt->execute([$turf_id]);
     $items = $stmt->fetchAll();
 
     send_json_response('success', 'Equipment fetched successfully.', $items);

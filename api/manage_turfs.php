@@ -47,11 +47,12 @@ if ($method === 'GET') {
     $location = sanitize_input($_POST['location'] ?? '');
     $category = sanitize_input($_POST['category'] ?? '');
     $description = sanitize_input($_POST['description'] ?? '');
+    $available_days = sanitize_input($_POST['available_days'] ?? 'Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday');
 
     if ($action === 'add') {
         try {
-            $stmt = $pdo->prepare("INSERT INTO turfs (owner_id, name, price_per_hour, location, sport_category, description, status) VALUES (?, ?, ?, ?, ?, ?, 'pending')");
-            $stmt->execute([$owner_id, $name, $price, $location, $category, $description]);
+            $stmt = $pdo->prepare("INSERT INTO turfs (owner_id, name, price_per_hour, location, sport_category, description, available_days, status) VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')");
+            $stmt->execute([$owner_id, $name, $price, $location, $category, $description, $available_days]);
             $new_id = $pdo->lastInsertId();
             
             // Handle primary image upload
@@ -73,8 +74,8 @@ if ($method === 'GET') {
     } elseif ($action === 'update') {
         $turf_id = sanitize_input($_POST['turf_id'] ?? 0);
         try {
-            $stmt = $pdo->prepare("UPDATE turfs SET name = ?, price_per_hour = ?, location = ?, sport_category = ?, description = ? WHERE id = ? AND owner_id = ?");
-            $stmt->execute([$name, $price, $location, $category, $description, $turf_id, $owner_id]);
+            $stmt = $pdo->prepare("UPDATE turfs SET name = ?, price_per_hour = ?, location = ?, sport_category = ?, description = ?, available_days = ? WHERE id = ? AND owner_id = ?");
+            $stmt->execute([$name, $price, $location, $category, $description, $available_days, $turf_id, $owner_id]);
             
             // Primary image update
             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {

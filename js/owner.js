@@ -39,6 +39,12 @@ const TurfKickOwner = {
             if (result.status === 'success') {
                 this.turfs = result.data;
                 this.renderTurfList();
+                
+                // Populate itemTurfId dropdown
+                const turfSelect = document.getElementById('itemTurfId');
+                if (turfSelect) {
+                    turfSelect.innerHTML = this.turfs.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+                }
             }
         } catch (error) { console.error('Fetch Turfs Error:', error); }
     },
@@ -235,6 +241,7 @@ const TurfKickOwner = {
         formData.append('location', document.getElementById('add_turfLoc').value);
         formData.append('category', document.getElementById('add_turfSport').value);
         formData.append('description', document.getElementById('add_turfDesc').value);
+        formData.append('available_days', document.getElementById('add_turfDays').value);
         const file = document.getElementById('add_turfImage').files[0];
         if (file) formData.append('image', file);
         formData.append('csrf_token', this.csrfToken);
@@ -302,7 +309,9 @@ const TurfKickOwner = {
         const result = await response.json();
         const container = document.getElementById('itemList');
         if (result.status === 'success' && result.data.length > 0) {
-            container.innerHTML = result.data.map(item => `<div class="item-row"><div><strong>${item.name}</strong><br><small>₹${item.price_per_session}</small></div></div>`).join('');
+            container.innerHTML = result.data.map(item => `<div class="item-row"><div><strong>${item.name}</strong> <small style="opacity:0.7">(${item.turf_name || 'All'})</small><br><small>₹${item.price_per_session}</small></div></div>`).join('');
+        } else {
+            container.innerHTML = '<p style="opacity: 0.5; text-align: center;">No equipment found.</p>';
         }
     },
 
@@ -313,6 +322,25 @@ const TurfKickOwner = {
         if (result.status === 'success' && result.data.length > 0) {
             container.innerHTML = result.data.map(b => `<tr><td>${b.user_name}</td><td>${b.booking_date}</td><td>${b.slot_label}</td><td>None</td><td>${b.status}</td><td>---</td></tr>`).join('');
         }
+    },
+
+    async addEquipment() {
+        const formData = new FormData();
+        formData.append('action', 'add');
+        formData.append('name', document.getElementById('itemName').value);
+        formData.append('price', document.getElementById('itemPrice').value);
+        formData.append('turf_id', document.getElementById('itemTurfId').value);
+        formData.append('csrf_token', this.csrfToken);
+
+        const response = await fetch('api/manage_equipment.php', { method: 'POST', body: formData });
+        const result = await response.json();
+        alert(result.message);
+        if (result.status === 'success') {
+            if (typeof closeModal === 'function') closeModal('itemModal');
+            document.getElementById('itemName').value = '';
+            document.getElementById('itemPrice').value = '';
+            this.fetchEquipment();
+        }
     }
 };
 
@@ -320,3 +348,4 @@ const TurfKickOwner = {
 document.addEventListener('DOMContentLoaded', () => TurfKickOwner.init());
 window.TurfKickOwner = TurfKickOwner;
 window.confirmCopy = () => TurfKickOwner.confirmCopy();
+window.addEquipment = () => TurfKickOwner.addEquipment();
