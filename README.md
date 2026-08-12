@@ -383,12 +383,11 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 👨‍💻 Author
 
-**Your Name**  
+**NEERAJ N**  
 Full-Stack Developer
 
-📧 Email: your.email@example.com  
-💼 LinkedIn: linkedin.com/in/yourprofile  
-🐙 GitHub: github.com/yourusername  
+📧 Email: neerajnrj10@gmail.com  
+🐙 GitHub: github.com/Neeraj10687  
 
 ---
 
