@@ -1,10 +1,38 @@
-node_modules/
-.env
-*.log
-.DS_Store
+# Examples 1:
+(empty)
+
+# Example 2 (Project with artifacts):
+# Compiled and build artifacts
+*.pyc
+__pycache__/
+*.o
+*.obj
 dist/
 build/
-.cache/
+target/
+# Dependencies
+.venv/
+venv/
+node_modules/
+# Logs and temp files
+*.log
+*.tmp
+*.swp
+# Environment
+.env
+.env.local
+.env.*
+# Editors
+.vscode/
+.idea/
+.mypy_cache/
+.pytest_cache/
 coverage/
-*.sqlite
-*.db
+htmlcov/
+*.swp
+*.swo
+# System files
+.DS_Store
+Thumbs.db
+# Original rules preserved
+*.log
