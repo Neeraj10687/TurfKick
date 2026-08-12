@@ -3,31 +3,29 @@
 require_once '../config/db.php';
 require_once '../includes/helpers.php';
 
-$turf_id = sanitize_input($_GET['turf_id'] ?? 0);
+$turf_id = sanitize_int($_GET['turf_id'] ?? 0, 1);
 
-if (!$turf_id) {
-    send_json_response('error', 'Turf ID required.');
+if ($turf_id <= 0) {
+    send_json_response('error', 'Invalid turf ID.');
 }
 
 try {
-    // First, find the owner_id of the turf
-    $stmt = $pdo->prepare("SELECT owner_id FROM turfs WHERE id = ?");
+    // First, verify turf exists and is active
+    $stmt = $pdo->prepare("SELECT id, owner_id FROM turfs WHERE id = ? AND status = 'active'");
     $stmt->execute([$turf_id]);
     $turf = $stmt->fetch();
 
     if (!$turf) {
-        send_json_response('error', 'Turf not found.');
+        send_json_response('error', 'Turf not found or inactive.');
     }
 
-    $owner_id = $turf['owner_id'];
-
-    // Now fetch equipment for this turf
+    // Fetch equipment for this turf
     $stmt = $pdo->prepare("SELECT * FROM equipment WHERE turf_id = ? AND status = 'active'");
     $stmt->execute([$turf_id]);
     $items = $stmt->fetchAll();
 
     send_json_response('success', 'Equipment fetched successfully.', $items);
 } catch (Exception $e) {
-    send_json_response('error', 'Error: ' . $e->getMessage());
+    send_json_response('error', 'Error fetching equipment.');
 }
 ?>

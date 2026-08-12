@@ -8,6 +8,10 @@ session_start();
  */
 function send_json_response($status, $message, $data = null) {
     header('Content-Type: application/json');
+    // Don't expose internal error details in production
+    if ($status === 'error' && strpos($message, 'SQLSTATE') !== false) {
+        $message = 'An unexpected error occurred. Please try again.';
+    }
     echo json_encode([
         'status' => $status,
         'message' => $message,
@@ -67,6 +71,43 @@ function require_admin() {
  * Sanitize input data.
  */
 function sanitize_input($data) {
-    return htmlspecialchars(stripslashes(trim($data)));
+    if (is_array($data)) {
+        return array_map('sanitize_input', $data);
+    }
+    return htmlspecialchars(stripslashes(trim($data)), ENT_QUOTES, 'UTF-8');
+}
+
+/**
+ * Validate and sanitize integer input.
+ */
+function sanitize_int($data, $min = null, $max = null) {
+    $int = filter_var($data, FILTER_VALIDATE_INT);
+    if ($int === false) {
+        return 0;
+    }
+    if ($min !== null && $int < $min) {
+        return $min;
+    }
+    if ($max !== null && $int > $max) {
+        return $max;
+    }
+    return $int;
+}
+
+/**
+ * Validate and sanitize float/decimal input.
+ */
+function sanitize_float($data, $min = null, $max = null) {
+    $float = filter_var($data, FILTER_VALIDATE_FLOAT);
+    if ($float === false) {
+        return 0.0;
+    }
+    if ($min !== null && $float < $min) {
+        return $min;
+    }
+    if ($max !== null && $float > $max) {
+        return $max;
+    }
+    return $float;
 }
 ?>
