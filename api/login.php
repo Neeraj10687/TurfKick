@@ -1,7 +1,8 @@
 <?php
 // api/login.php
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+// Disable error display in production - errors are logged internally
+ini_set('display_errors', 0);
+error_reporting(0);
 require_once '../config/db.php';
 require_once '../includes/helpers.php';
 
